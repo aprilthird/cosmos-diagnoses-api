@@ -11,4 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cosmos.Diagnoses.Api.CrossCutting\Cosmos.Diagnoses.Api.CrossCutting.csproj" />
+    <ProjectReference Include="..\Cosmos.Diagnoses.Api.Domain\Cosmos.Diagnoses.Api.Domain.csproj" />
+    <ProjectReference Include="..\Cosmos.Diagnoses.Api.Infrastructure\Cosmos.Diagnoses.Api.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
