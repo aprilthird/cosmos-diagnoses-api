@@ -3,6 +3,7 @@ using Cosmos.Diagnoses.Api.Domain.Repositories;
 using Cosmos.Diagnoses.Api.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
 
 namespace Cosmos.Diagnoses.Api.Web.Controllers
 {
@@ -22,10 +23,18 @@ namespace Cosmos.Diagnoses.Api.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _codeRepository.GetByIdAsync(id);
-            if (result == null)
-                return NotFound();
-            return Ok(result);
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
+            try
+            {
+                var result = await _codeRepository.GetByIdAsync(id);
+                return Ok(result);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return NotFound($"No encontrado un CIE 10 con ID '{id}'.");
+            }
         }
     }
 }

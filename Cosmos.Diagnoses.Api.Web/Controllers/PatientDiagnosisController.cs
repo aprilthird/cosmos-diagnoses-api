@@ -22,10 +22,18 @@ namespace Cosmos.Diagnoses.Api.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _patientDiagnosisRepository.GetByIdAsync(id);
-            if (result == null)
-                return NotFound();
-            return Ok(result);
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
+            try
+            {
+                var result = await _patientDiagnosisRepository.GetByIdAsync(id);
+                return Ok(result);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return NotFound($"No encontrado un diagnóstico de paciente con ID '{id}'.");
+            }
         }
 
         [HttpPost]
